@@ -1,0 +1,19 @@
+version: '3.5'
+
+services:
+  redis:
+    image: redis:5.0.4-alpine
+    command: ["redis-server", "--appendonly", "yes"]
+    volumes:
+      - .data/redis:/data
+    ports: 
+      - "6379:6379"
+  # user and password: admin
+  phpredmin:
+    image: sasanrose/phpredmin
+    environment:
+      - PHPREDMIN_DATABASE_REDIS_0_HOST=redis
+    ports:
+      - "9091:80"
+    depends_on:
+      - redis
