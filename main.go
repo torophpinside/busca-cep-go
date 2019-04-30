@@ -16,6 +16,6 @@ func main() {
 	}
 	gin.SetMode(os.Getenv("GIN_ROUTER_MODE"))
 	r := gin.Default()
-	r.GET("/find/:cep", cep.FindCep)
-	r.Run(":7070")
+	r.GET("/api/find/:cep", cep.FindCep)
+	r.Run(os.Getenv("GIN_ROUTER_PORT"))
 }

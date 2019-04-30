@@ -14,6 +14,6 @@ services:
     environment:
       - PHPREDMIN_DATABASE_REDIS_0_HOST=redis
     ports:
-      - "9091:80"
+      - "9696:80"
     depends_on:
       - redis

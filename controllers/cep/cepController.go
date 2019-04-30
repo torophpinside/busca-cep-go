@@ -5,30 +5,19 @@ import (
 	"net/http"
 
 	"busca-cep-go/config"
+	"busca-cep-go/model"
 
 	"github.com/gin-gonic/gin"
 )
 
-type Cep struct {
-	Cep         string
-	Logradouro  string
-	Complemento string
-	Bairro      string
-	Localidade  string
-	UF          string
-	Unidade     string
-	Ibge        string
-	Gia         string
-}
-
 func FindCep(context *gin.Context) {
-	cep := &Cep{}
+	cep := &model.Cep{}
 
 	cepKey := "cep_key_" + context.Param("cep")
 	val, err := config.GetRedis().Get(cepKey).Result()
 	if err == nil && val != "" {
 		err = json.Unmarshal([]byte(val), cep)
-		context.JSON(200, cep)
+		buildResponse(context, cep)
 		return
 	}
 
@@ -60,5 +49,11 @@ func FindCep(context *gin.Context) {
 		panic(err)
 	}
 
-	context.JSON(200, cep)
+	buildResponse(context, cep)
+}
+
+func buildResponse(context *gin.Context, cep *model.Cep) {
+	context.JSON(200, gin.H{
+		"data": cep,
+	})
 }
