@@ -14,7 +14,7 @@ func Routes() {
 }
 
 func findCep(context *gin.Context) {
-	app := application.GetInstance(model.GetInstance())
+	app := application.GetInstance(model.GetGormInstance())
 	cep := app.FindCep(context.Param("cep"))
 	context.JSON(200, cep)
 }

@@ -1,5 +1,5 @@
-hash: 4d5f623facf1847e6b22913b7ccaf56368048a70011daa47f1dcfeb7c2846d3b
-updated: 2019-04-30T23:17:11.508565474-03:00
+hash: bffc6dfdf36e405c5c3793723658d51d72e34712dc9947e5ba35c8bc4a2cccc8
+updated: 2019-05-03T01:08:45.663239302-03:00
 imports:
 - name: github.com/gin-contrib/sse
   version: 5545eab6dad3bbbd6c5ae9186383c2a9d23c0dae
@@ -18,10 +18,16 @@ imports:
   - internal/pool
   - internal/proto
   - internal/util
+- name: github.com/go-sql-driver/mysql
+  version: d0a548181995c293eb09c61ef80099ba1cdbe8f5
 - name: github.com/golang/protobuf
   version: e91709a02e0e8ff8b86b7aa913fdc9ae9498e825
   subpackages:
   - proto
+- name: github.com/jinzhu/gorm
+  version: 29cb2a42d2a41e5ae449435e1c9277d47115775c
+  subpackages:
+  - dialects/mysql
 - name: github.com/joho/godotenv
   version: 23d116af351c84513e1946b527c88823e476be13
 - name: github.com/json-iterator/go
@@ -40,6 +46,10 @@ imports:
   version: d89cdac9e8725f2aefce25fcbfef41134c9ad412
   subpackages:
   - unix
+- name: google.golang.org/appengine
+  version: 54a98f90d1c46b7731eb8fb305d2a321c30ef610
+  subpackages:
+  - cloudsql
 - name: gopkg.in/go-playground/validator.v8
   version: 5f1438d3fca68893a817e4a66806cea46a9e4ebf
 - name: gopkg.in/yaml.v2

@@ -13,7 +13,7 @@ type CepRepositoryImpl struct {
 	Database *redis.Client
 }
 
-func GetInstance() model.CepRepository {
+func GetRedisInstance() model.CepRepository {
 	redisClient := config.GetRedis()
 	return &CepRepositoryImpl{Database: redisClient}
 }
