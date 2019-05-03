@@ -1,6 +1,11 @@
 package model
 
+import (
+	"busca-cep-go/buscaCep/core/domain/model"
+)
+
 type Cep struct {
+	model.Base
 	Cep         string `json:"cep"`
 	Logradouro  string `json:"logradouro"`
 	Complemento string `json:"complento"`
