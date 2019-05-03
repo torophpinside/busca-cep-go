@@ -25,12 +25,11 @@ func init() {
 		DB:       db,
 	})
 
-	pong, err := conn.Ping().Result()
+	_, err = conn.Ping().Result()
 	if err != nil {
 		fmt.Println("error connecting redis")
 		os.Exit(1)
 	}
-	fmt.Println(pong, err)
 	redisClient = conn
 }
 

@@ -1,3 +1,5 @@
 busca-cep-go
 .data
 .vscode
+.env
+vendor

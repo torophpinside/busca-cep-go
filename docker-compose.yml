@@ -1,6 +1,28 @@
 version: '3.5'
 
 services:
+  proxy:
+    image: jwilder/nginx-proxy
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    links:
+      - "app:buscacep.local"
+
+  app:
+    image: golang:1.12.4-alpine
+    volumes:
+      - .:/go/src/busca-cep-go
+    working_dir: /go/src/busca-cep-go
+    command: go run main.go
+    ports: 
+      - "7070:7070"
+    environment: 
+      VIRTUAL_HOST: buscacep.local
+    depends_on:
+      - redis
+
   redis:
     image: redis:5.0.4-alpine
     command: ["redis-server", "--appendonly", "yes"]
@@ -8,11 +30,13 @@ services:
       - .data/redis:/data
     ports: 
       - "6379:6379"
+
   # user and password: admin
   phpredmin:
     image: sasanrose/phpredmin
-    environment:
-      - PHPREDMIN_DATABASE_REDIS_0_HOST=redis
+    environment: 
+      VIRTUAL_HOST: phpredmin.buscacep.local
+      PHPREDMIN_DATABASE_REDIS_0_HOST: redis
     ports:
       - "9696:80"
     depends_on:
