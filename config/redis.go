@@ -13,7 +13,11 @@ import (
 var redisClient *redis.Client
 
 func init() {
-	err := godotenv.Load()
+	envFile := os.Getenv("ENV_FILE")
+	if envFile == "" {
+		envFile = ".env"
+	}
+	err := godotenv.Load(envFile)
 	if err != nil {
 		log.Fatal("Error loading .env file")
 	}

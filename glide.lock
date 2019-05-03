@@ -1,5 +1,5 @@
 hash: bffc6dfdf36e405c5c3793723658d51d72e34712dc9947e5ba35c8bc4a2cccc8
-updated: 2019-05-03T01:08:45.663239302-03:00
+updated: 2019-05-03T01:26:28.253983081-03:00
 imports:
 - name: github.com/gin-contrib/sse
   version: 5545eab6dad3bbbd6c5ae9186383c2a9d23c0dae
@@ -28,6 +28,8 @@ imports:
   version: 29cb2a42d2a41e5ae449435e1c9277d47115775c
   subpackages:
   - dialects/mysql
+- name: github.com/jinzhu/inflection
+  version: 04140366298a54a039076d798123ffa108fff46c
 - name: github.com/joho/godotenv
   version: 23d116af351c84513e1946b527c88823e476be13
 - name: github.com/json-iterator/go

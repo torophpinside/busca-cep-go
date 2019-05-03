@@ -1,28 +1,29 @@
 version: '3.5'
 
 services:
-  # proxy:
-  #   image: jwilder/nginx-proxy
-  #   ports:
-  #     - "80:80"
-  #   volumes:
-  #     - /var/run/docker.sock:/tmp/docker.sock:ro
-  #   links:
-  #     - "app:buscacep.local"
+  proxy:
+    image: jwilder/nginx-proxy
+    ports:
+      - "80:80"
+    volumes:
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    links:
+      - "app:buscacep.local"
 
-  # app:
-  #   image: golang:1.12.4-alpine
-  #   volumes:
-  #     - .:/go/src/busca-cep-go
-  #   working_dir: /go/src/busca-cep-go
-  #   command: go run main.go
-  #   ports: 
-  #     - "7070:7070"
-  #   environment: 
-  #     VIRTUAL_HOST: buscacep.local
-  #   depends_on:
-  #     - redis
-  #     - mysql
+  app:
+    image: golang:1.12.4-alpine
+    volumes:
+      - .:/go/src/busca-cep-go
+    working_dir: /go/src/busca-cep-go
+    command: go run main.go
+    ports: 
+      - "7070:7070"
+    environment: 
+      VIRTUAL_HOST: buscacep.local
+      ENV_FILE: '.env.docker'
+    depends_on:
+      - redis
+      - mysql
 
   redis:
     image: redis:5.0.4-alpine

@@ -5,6 +5,7 @@ import (
 	"busca-cep-go/config"
 	"encoding/json"
 	"net/http"
+	"strings"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
@@ -22,9 +23,8 @@ func GetGormInstance() model.CepRepository {
 
 func (cepRepository *GormCepRepository) GetCep(cepData string) *model.Cep {
 	cep := &model.Cep{}
-	cep.Cep = cepData
 
-	err := cepRepository.Database.Find(&cep).Error
+	err := cepRepository.Database.Where("cep LIKE ?", cepData).First(&cep).Error
 	if err == nil {
 		return cep
 	}
@@ -46,7 +46,8 @@ func (cepRepository *GormCepRepository) SaveCep(cepData string) (*model.Cep, boo
 	if err != nil {
 		return nil, false
 	}
-
+	cep.Cep = strings.Replace(cep.Cep, "-", "", -1)
+	cep.DeletedAt = nil
 	err = cepRepository.Database.Save(&cep).Error
 	if err != nil {
 		return nil, false

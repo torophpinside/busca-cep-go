@@ -1,7 +1,7 @@
 package model
 
 import (
-	"busca-cep-go/buscaCep/core/domain/model"
+	"busca-cep-go/buscaCep/core/infra/domain/model"
 )
 
 type Cep struct {
