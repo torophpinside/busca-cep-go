@@ -15,6 +15,13 @@ func Routes() {
 
 func findCep(context *gin.Context) {
 	app := application.GetInstance(model.GetGormInstance())
-	cep := app.FindCep(context.Param("cep"))
+	cep, err := app.FindCep(context.Param("cep"))
+	if err != nil {
+		context.AbortWithStatusJSON(404, gin.H{
+			"cep":     context.Param("cep"),
+			"message": err.Error(),
+		})
+		return
+	}
 	context.JSON(200, cep)
 }

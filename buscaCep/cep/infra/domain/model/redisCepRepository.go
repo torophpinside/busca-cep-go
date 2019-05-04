@@ -18,17 +18,17 @@ func GetRedisInstance() model.CepRepository {
 	return &CepRepositoryImpl{Database: redisClient}
 }
 
-func (cepRepository *CepRepositoryImpl) GetCep(cepData string) *model.Cep {
+func (cepRepository *CepRepositoryImpl) GetCep(cepData string) (*model.Cep, bool) {
 	cep := &model.Cep{}
 
 	cepKey := "cep_key_" + cepData
 	val, err := cepRepository.Database.Get(cepKey).Result()
 	if err == nil && val != "" {
 		err = json.Unmarshal([]byte(val), cep)
-		return cep
+		return nil, true
 	}
 
-	return nil
+	return cep, false
 }
 
 func (cepRepository *CepRepositoryImpl) SaveCep(cepData string) (*model.Cep, bool) {
@@ -37,24 +37,24 @@ func (cepRepository *CepRepositoryImpl) SaveCep(cepData string) (*model.Cep, boo
 	cepKey := "cep_key_" + cepData
 	resp, err := http.Get("https://viacep.com.br/ws/" + cepData + "/json/")
 	if err != nil {
-		return nil, false
+		return nil, true
 	}
 
 	defer resp.Body.Close()
 
 	err = json.NewDecoder(resp.Body).Decode(cep)
 	if err != nil {
-		return nil, false
+		return nil, true
 	}
 	out, err := json.Marshal(cep)
 	if err != nil {
-		return nil, false
+		return nil, true
 	}
 
 	err = config.GetRedis().Set(cepKey, string(out), 0).Err()
 	if err != nil {
-		return nil, false
+		return nil, true
 	}
 
-	return cep, true
+	return cep, false
 }

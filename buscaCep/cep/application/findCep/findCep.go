@@ -2,6 +2,7 @@ package findCep
 
 import (
 	"busca-cep-go/buscaCep/cep/domain/model"
+	"errors"
 )
 
 type Application struct {
@@ -12,11 +13,17 @@ func GetInstance(repository model.CepRepository) *Application {
 	return &Application{CepRepository: repository}
 }
 
-func (application *Application) FindCep(cepData string) *model.Cep {
-	cep := application.CepRepository.GetCep(cepData)
+func (application *Application) FindCep(cepData string) (*model.Cep, error) {
+	cep, err := application.CepRepository.GetCep(cepData)
 	if cep == nil {
-		cep, _ = application.CepRepository.SaveCep(cepData)
+		cep, err = application.CepRepository.SaveCep(cepData)
+		if err != false {
+			return nil, errors.New("cep_not_found")
+		}
+		if cep == nil {
+			return nil, errors.New("cep_not_found")
+		}
 	}
 
-	return cep
+	return cep, nil
 }
