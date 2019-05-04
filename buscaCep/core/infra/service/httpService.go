@@ -1,16 +1,15 @@
 package service
 
 import (
-	"busca-cep-go/buscaCep/cep/domain/model"
 	"net/http"
 )
 
-func Call(url string, cep *model.Cep) *http.Response {
+func Call(url string) *http.Response {
 	resp, err := http.Get(url)
 	if err != nil || resp.StatusCode != 200 {
+		resp.Body.Close()
 		return nil
 	}
-	defer resp.Body.Close()
 
 	return resp
 }

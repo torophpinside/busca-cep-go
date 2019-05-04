@@ -54,21 +54,23 @@ func (cepRepository *GormCepRepository) SaveCep(cepData string) (*model.Cep, boo
 }
 
 func callWs(url string, key string, cepRepository *GormCepRepository) (*model.Cep, bool) {
-	var cep model.Cep = &model.Cep{}
+	cep := &model.Cep{}
 
-	resp := service.Call(url, cep)
+	resp := service.Call(url)
 	if resp == nil {
 		cepRepository.Cache.Set(key, "error", 0).Err()
 		return nil, true
-	} else if cep == nil {
-		cepRepository.Cache.Set(key, "error", 0).Err()
-		return nil, true
 	}
+	defer resp.Body.Close()
 
 	err := json.NewDecoder(resp.Body).Decode(cep)
 	if err != nil {
 		return nil, true
 	}
+	if cep.Cep == "" {
+		return nil, true
+	}
+
 	cep.Cep = strings.Replace(cep.Cep, "-", "", -1)
 	cep.DeletedAt = nil
 
