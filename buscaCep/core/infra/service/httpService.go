@@ -4,12 +4,14 @@ import (
 	"net/http"
 )
 
-func Call(url string) *http.Response {
-	resp, err := http.Get(url)
-	if err != nil || resp.StatusCode != 200 {
-		resp.Body.Close()
-		return nil
-	}
+var channelResponse chan (*http.Response) = make(chan *http.Response)
 
-	return resp
+func Call(url string) *http.Response {
+	go fromUrl(url)
+	return <-channelResponse
+}
+
+func fromUrl(url string) {
+	resp, _ := http.Get(url)
+	channelResponse <- resp
 }
