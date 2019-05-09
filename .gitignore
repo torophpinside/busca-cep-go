@@ -4,3 +4,4 @@ busca-cep-go
 .env
 .env.docker
 vendor
+docker-compose.yml
