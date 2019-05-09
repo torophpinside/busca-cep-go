@@ -2,4 +2,5 @@ busca-cep-go
 .data
 .vscode
 .env
+.env.docker
 vendor

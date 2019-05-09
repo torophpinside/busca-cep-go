@@ -31,12 +31,12 @@ services:
     volumes:
       - .data/redis:/data
     ports: 
-      - "6379:6379"
+      - "6479:6379"
 
   mysql:
     image: mysql:5.7
     ports:
-        - '3306:3306'
+        - '3406:3306'
     volumes:
       - .data/mysql:/var/lib/mysql
     restart: always
