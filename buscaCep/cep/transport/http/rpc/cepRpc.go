@@ -2,14 +2,37 @@ package rpc
 
 import (
 	application "busca-cep-go/buscaCep/cep/application/findCep"
-	model "busca-cep-go/buscaCep/cep/domain/model"
 	infraModel "busca-cep-go/buscaCep/cep/infra/domain/model"
+	"encoding/json"
+	"log"
+	"net/rpc"
 )
 
-type CepRpc int
+type CepRpcService int
 
-func (cepRpc *CepRpc) FindCep(cep string) *model.Cep {
+type CepRpcServiceResponse struct {
+	Cep string
+}
+
+func RegisterCepService() {
+	err := rpc.Register(new(CepRpcService))
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+func (cepRpcService *CepRpcService) FindCep(cep string, data *CepRpcServiceResponse) error {
 	app := application.GetInstance(infraModel.GetGormInstance())
-	cepData, _ := app.FindCep(cep)
-	return cepData
+	cepData, err := app.FindCep(cep)
+	if err != nil {
+		return err
+	}
+
+	cepDataOut, err := json.Marshal(cepData)
+	if err != nil {
+		return err
+	}
+
+	data.Cep = string(cepDataOut)
+	return nil
 }
