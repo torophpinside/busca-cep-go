@@ -20,5 +20,5 @@ func RegisterRpcServer() {
 	}
 
 	cepRpcBase.RegisterCepService()
-	rpc.Accept(inbound)
+	go rpc.Accept(inbound)
 }

@@ -32,5 +32,5 @@ func GetRouter() *gin.Engine {
 }
 
 func Run() {
-	router.Run(os.Getenv("GIN_ROUTER_PORT"))
+	log.Fatal(router.Run(os.Getenv("GIN_ROUTER_PORT")))
 }
