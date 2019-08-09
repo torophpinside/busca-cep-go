@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
@@ -19,7 +20,11 @@ var gormClient *gorm.DB
 func init() {
 	envFile := os.Getenv("ENV_FILE")
 	if envFile == "" {
-		envFile = ".env"
+		pathFile, err := filepath.Abs(os.Getenv("GOPATH") + "/src/busca-cep-go/.env")
+		if err != nil {
+			panic("env file not found")
+		}
+		envFile = pathFile
 	}
 
 	err := godotenv.Load(envFile)

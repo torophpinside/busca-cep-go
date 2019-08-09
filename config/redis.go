@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"path/filepath"
 	"strconv"
 
 	"github.com/go-redis/redis"
@@ -15,7 +16,11 @@ var redisClient *redis.Client
 func init() {
 	envFile := os.Getenv("ENV_FILE")
 	if envFile == "" {
-		envFile = ".env"
+		pathFile, err := filepath.Abs(os.Getenv("GOPATH") + "/src/busca-cep-go/.env")
+		if err != nil {
+			panic("env file not found")
+		}
+		envFile = pathFile
 	}
 	err := godotenv.Load(envFile)
 	if err != nil {
