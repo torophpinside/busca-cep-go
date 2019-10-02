@@ -1,30 +1,21 @@
 package config
 
 import (
+	"busca-cep-go/utils"
 	"fmt"
 	"log"
 	"os"
-	"path/filepath"
 	"strconv"
 
 	"github.com/go-redis/redis"
-	"github.com/joho/godotenv"
 )
 
 var redisClient *redis.Client
 
 func init() {
-	envFile := os.Getenv("ENV_FILE")
-	if envFile == "" {
-		pathFile, err := filepath.Abs(os.Getenv("GOPATH") + "/src/busca-cep-go/.env")
-		if err != nil {
-			panic("env file not found")
-		}
-		envFile = pathFile
-	}
-	err := godotenv.Load(envFile)
+	err := utils.LoadEnv()
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		log.Fatalf("error_loading_env:%s", err.Error())
 	}
 
 	db, _ := strconv.Atoi(os.Getenv("REDIS_DB"))
@@ -34,11 +25,13 @@ func init() {
 		DB:       db,
 	})
 
-	_, err = conn.Ping().Result()
+	result, err := conn.Ping().Result()
 	if err != nil {
 		fmt.Println("error connecting redis")
 		os.Exit(1)
 	}
+
+	fmt.Println("redis connected:" + result)
 	redisClient = conn
 }
 

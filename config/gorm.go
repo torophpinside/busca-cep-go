@@ -1,37 +1,25 @@
 package config
 
 import (
+	"busca-cep-go/utils"
 	"fmt"
-	"log"
-	"os"
-	"path/filepath"
-
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
+	"log"
+	"os"
 
 	cepModel "busca-cep-go/buscaCep/cep/domain/model"
 
 	"time"
-
-	"github.com/joho/godotenv"
 )
 
 var gormClient *gorm.DB
 
 func init() {
-	envFile := os.Getenv("ENV_FILE")
-	if envFile == "" {
-		pathFile, err := filepath.Abs(os.Getenv("GOPATH") + "/src/busca-cep-go/.env")
-		if err != nil {
-			panic("env file not found")
-		}
-		envFile = pathFile
-	}
-
-	err := godotenv.Load(envFile)
+	err := utils.LoadEnv()
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		log.Fatalf("error_loading_env:%s", err.Error())
 	}
 	connString := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True",
 		os.Getenv("MYSQL_USER"),
