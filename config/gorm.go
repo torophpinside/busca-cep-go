@@ -12,6 +12,8 @@ import (
 
 	cepModel "busca-cep-go/buscaCep/cep/domain/model"
 
+	"time"
+
 	"github.com/joho/godotenv"
 )
 
@@ -42,9 +44,12 @@ func init() {
 	if err != nil {
 		panic("mysql_not_connected")
 	}
-	gormClient = db
 
 	db.Debug().AutoMigrate(&cepModel.Cep{})
+	db.DB().SetMaxOpenConns(700)
+	db.DB().SetMaxIdleConns(10)
+	db.DB().SetConnMaxLifetime(1 * time.Second)
+	gormClient = db
 }
 
 func GetGorm() *gorm.DB {

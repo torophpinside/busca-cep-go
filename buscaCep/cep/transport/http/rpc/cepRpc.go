@@ -1,7 +1,7 @@
 package rpc
 
 import (
-	application "busca-cep-go/buscaCep/cep/application/findCep"
+	application "busca-cep-go/buscaCep/cep/application/findcep"
 	infraModel "busca-cep-go/buscaCep/cep/infra/domain/model"
 	"encoding/json"
 	"log"

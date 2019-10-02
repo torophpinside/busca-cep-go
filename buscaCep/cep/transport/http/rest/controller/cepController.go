@@ -1,7 +1,7 @@
 package controller
 
 import (
-	application "busca-cep-go/buscaCep/cep/application/findCep"
+	application "busca-cep-go/buscaCep/cep/application/findcep"
 	model "busca-cep-go/buscaCep/cep/infra/domain/model"
 	router "busca-cep-go/config"
 

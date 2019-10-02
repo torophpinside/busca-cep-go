@@ -1,4 +1,4 @@
-package findCep
+package findcep
 
 import (
 	"busca-cep-go/buscaCep/cep/infra/domain/model"
