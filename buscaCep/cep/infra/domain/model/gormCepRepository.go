@@ -2,6 +2,7 @@ package model
 
 import (
 	model "busca-cep-go/buscaCep/cep/domain/model"
+	"busca-cep-go/buscaCep/cep/domain/repository"
 	service "busca-cep-go/buscaCep/core/infra/service"
 	"busca-cep-go/config"
 	"encoding/json"
@@ -18,7 +19,7 @@ type GormCepRepository struct {
 	Cache    *redis.Client
 }
 
-func GetGormInstance() model.CepRepository {
+func GetGormInstance() repository.CepRepository {
 	gormClient := config.GetGorm()
 	redisClient := config.GetRedis()
 	return &GormCepRepository{Database: gormClient, Cache: redisClient}

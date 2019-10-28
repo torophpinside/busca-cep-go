@@ -1,45 +1,83 @@
 package findcep
 
 import (
-	"busca-cep-go/buscaCep/cep/infra/domain/model"
+	"busca-cep-go/buscaCep/cep/domain/model"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/mock"
 	"testing"
 )
 
-var application = GetInstance(model.GetGormInstance())
-
-func TestFindCepEmpty(t *testing.T) {
-	cep, err := application.FindCep("")
-	if err == nil {
-		t.Errorf("err should not be nil")
-	}
-
-	if cep != nil {
-		t.Errorf("cep should be nil, %v returned", cep)
-	}
+type CepRepositoryMock struct {
+	mock.Mock
 }
 
-func TestFindCepNotExist(t *testing.T) {
-	cep, err := application.FindCep("123456")
-	if err == nil {
-		t.Errorf("err should not be nil")
+func (m *CepRepositoryMock) GetCep(cepData string) (*model.Cep, bool) {
+	args := m.Called(cepData)
+	if args.Get(0) != nil {
+		return &model.Cep{}, args.Bool(1)
 	}
-
-	if cep != nil {
-		t.Errorf("cep should be nil, %v returned", cep)
-	}
+	return nil, args.Bool(1)
 }
 
-func TestFindCepSuccess(t *testing.T) {
-	cep, err := application.FindCep("88036100")
+func (m *CepRepositoryMock) SaveCep(cepData string) (*model.Cep, bool) {
+	args := m.Called(cepData)
+	if args.Get(0) != nil {
+		return &model.Cep{}, args.Bool(1)
+	}
+	return nil, args.Bool(1)
+}
+
+func TestApplication_FindCep(t *testing.T) {
+	cr := new(CepRepositoryMock)
+	s := "12345678"
+	cr.On("GetCep", s).Return(&model.Cep{}, false)
+
+	app := GetInstance(cr)
+	cep, err := app.FindCep(s)
 	if err != nil {
-		t.Errorf("err should be nil")
+		t.Error("error getting cep")
 	}
+	cr.AssertExpectations(t)
+	assert.Equal(t, &model.Cep{}, cep)
+}
 
-	if cep == nil {
-		t.Errorf("cep should not be nil")
-	}
+func TestApplication_FindCepNotFoundSave(t *testing.T) {
+	cr := new(CepRepositoryMock)
+	s := "12345678"
+	cr.On("GetCep", s).Return(nil, true)
+	cr.On("SaveCep", s).Return(&model.Cep{}, false)
 
-	if cep.UF != "SC" {
-		t.Errorf("cep UF should be %v, returned %v", "SC", cep.UF)
+	app := GetInstance(cr)
+	cep, err := app.FindCep(s)
+	if err != nil {
+		t.Error("error getting cep")
 	}
+	cr.AssertExpectations(t)
+	assert.Equal(t, &model.Cep{}, cep)
+}
+
+func TestApplication_FindCepNotFoundNoSaveError(t *testing.T) {
+	cr := new(CepRepositoryMock)
+	s := "12345678"
+	cr.On("GetCep", s).Return(nil, true)
+	cr.On("SaveCep", s).Return(nil, true)
+
+	app := GetInstance(cr)
+	_, err := app.FindCep(s)
+
+	cr.AssertExpectations(t)
+	assert.Error(t, err, "error_save_cep")
+}
+
+func TestApplication_FindCepNotFoundNoSaveCepNotFounr(t *testing.T) {
+	cr := new(CepRepositoryMock)
+	s := "12345678"
+	cr.On("GetCep", s).Return(nil, true)
+	cr.On("SaveCep", s).Return(nil, false)
+
+	app := GetInstance(cr)
+	_, err := app.FindCep(s)
+
+	cr.AssertExpectations(t)
+	assert.Error(t, err, "cep_not_found")
 }

@@ -2,6 +2,7 @@ package model
 
 import (
 	model "busca-cep-go/buscaCep/cep/domain/model"
+	"busca-cep-go/buscaCep/cep/domain/repository"
 	"busca-cep-go/config"
 	"encoding/json"
 	"net/http"
@@ -13,7 +14,7 @@ type CepRepositoryImpl struct {
 	Database *redis.Client
 }
 
-func GetRedisInstance() model.CepRepository {
+func GetRedisInstance() repository.CepRepository {
 	redisClient := config.GetRedis()
 	return &CepRepositoryImpl{Database: redisClient}
 }
